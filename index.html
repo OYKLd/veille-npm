@@ -1,1 +1,528 @@
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours complet sur NPM pour débutants</title>
+    <style>
+        :root {
+            --primary-color: #cb3837;
+            --secondary-color: #333;
+            --background-color: #f8f9fa;
+            --code-background: #272822;
+            --text-color: #333;
+            --light-gray: #e9ecef;
+            --white: #fff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #b02f2f 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><text x="10" y="30" font-family="monospace" font-size="10" fill="white">npm</text></svg>');
+            opacity: 0.1;
+        }
+        
+        .npm-logo {
+            width: 120px;
+            height: 120px;
+            background-color: var(--white);
+            border-radius: 8px;
+            margin: 0 auto 1.5rem;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .npm-logo svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        main {
+            background-color: var(--white);
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .code-block {
+            background-color: var(--code-background);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+        }
+        
+        .code-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: rgba(203, 56, 55, 0.8);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 0 4px 0 4px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .conclusion {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .npm-visualization {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .workflow-step {
+            text-align: center;
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            margin: 0 0.5rem;
+            flex: 1;
+            max-width: 200px;
+            position: relative;
+        }
+        
+        .workflow-step::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .workflow-step:last-child::after {
+            display: none;
+        }
+        
+        .package-json-example {
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            margin: 1rem 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .npm-visualization {
+                flex-direction: column;
+            }
+            
+            .workflow-step {
+                margin: 0.5rem 0;
+                max-width: 100%;
+            }
+            
+            .workflow-step::after {
+                content: "↓";
+                right: 50%;
+                bottom: -20px;
+                top: auto;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="npm-logo">
+                <svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg"><path fill="#CB3837" d="M240,250h100v-50h100V0H240V250z M340,50h50v100h-50V50z M480,0v200h100V50h50v150h50V50h50v150h50V0H480z M0,200h100V50h50v150h50V0H0V200z"></path></svg>
+            </div>
+            <h1>NPM pour Débutants</h1>
+            <p>Apprenez à utiliser Node Package Manager pour gérer efficacement vos projets JavaScript</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <main>
+            <section id="introduction">
+                <h2>1. Introduction à NPM</h2>
+                <p>NPM (Node Package Manager) est le gestionnaire de paquets officiel de Node.js. Il permet d'installer, de partager et de gérer les dépendances d'un projet JavaScript. Que ce soit pour un projet front-end (React, Vue, Angular) ou back-end (Express, NestJS), NPM est un outil indispensable.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="icon">📦</div>
+                        <h3>Gestion des Paquets</h3>
+                        <p>Installation, mise à jour et suppression facile des bibliothèques JavaScript.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔄</div>
+                        <h3>Dépendances</h3>
+                        <p>Gestion automatique des dépendances pour votre projet.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">⚙️</div>
+                        <h3>Scripts</h3>
+                        <p>Exécution de scripts de build, test et déploiement.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="installation">
+                <h2>2. Installation de NPM</h2>
+                <p>NPM est installé automatiquement avec Node.js. Pour vérifier si vous l'avez déjà installé, utilisez la commande :</p>
+                
+                <div class="code-block">
+                    <span class="code-label">shell</span>
+                    node -v  # vérifier la version de Node.js
+                    npm -v   # vérifier la version de NPM
+                </div>
+                
+                <p>Si NPM n'est pas installé, téléchargez Node.js depuis <a href="https://nodejs.org" target="_blank">nodejs.org</a> et installez-le.</p>
+                
+                <div class="npm-visualization">
+                    <div class="workflow-step">
+                        <div class="icon">💻</div>
+                        <h4>Télécharger</h4>
+                        <p>nodejs.org</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="icon">📥</div>
+                        <h4>Installer</h4>
+                        <p>Node.js + NPM</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="icon">✅</div>
+                        <h4>Vérifier</h4>
+                        <p>npm -v</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="npm-init">
+                <h2>3. Initialiser un projet avec <code>npm init</code></h2>
+                <p>La commande <code>npm init</code> permet de créer un fichier <code>package.json</code>, qui contient les informations sur votre projet et ses dépendances.</p>
+                
+                <div class="code-block">
+                    <span class="code-label">shell</span>
+                    npm init
+                </div>
+                
+                <p>Elle vous posera plusieurs questions (nom du projet, version, description, etc.). Pour aller plus vite, utilisez :</p>
+                
+                <div class="code-block">
+                    <span class="code-label">shell</span>
+                    npm init -y
+                </div>
+                
+                <p>Cela génère un <code>package.json</code> avec les valeurs par défaut.</p>
+            </section>
+            
+            <section id="installer-packages">
+                <h2>4. Installer des packages</h2>
+                <p>Il existe plusieurs façons d'installer des packages avec NPM:</p>
+                <ul>
+                    <li>
+                        <p><strong>Installer un package en dépendance normale :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install nom_du_package
+                        </div>
+                        <p>Exemple :</p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install express
+                        </div>
+                    </li>
+                    <li>
+                        <p><strong>Installer un package en tant que dépendance de développement :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install nom_du_package --save-dev
+                        </div>
+                        <p>Exemple :</p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install nodemon --save-dev
+                        </div>
+                    </li>
+                    <li>
+                        <p><strong>Installer toutes les dépendances listées dans <code>package.json</code> :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            
+            <section id="dependances">
+                <h2>5. Dépendances vs Dépendances de développement</h2>
+                <ul>
+                    <li><strong>dependencies</strong> : Packages nécessaires pour faire fonctionner l'application en production (ex: React, Express).</li>
+                    <li><strong>devDependencies</strong> : Packages utilisés uniquement pour le développement (ex: Jest pour les tests, Nodemon pour le rechargement automatique).</li>
+                </ul>
+                <p>Ces dépendances sont listées dans <code>package.json</code> :</p>
+                
+                <div class="package-json-example">
+                    <div class="code-block">
+                        <span class="code-label">json</span>
+                        {
+                          "dependencies": {
+                            "express": "^4.17.1"
+                          },
+                          "devDependencies": {
+                            "nodemon": "^2.0.15"
+                          }
+                        }
+                    </div>
+                </div>
+            </section>
+            
+            <section id="update-uninstall">
+                <h2>6. Mettre à jour et désinstaller des packages</h2>
+                <ul>
+                    <li>
+                        <p><strong>Mettre à jour un package :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm update nom_du_package
+                        </div>
+                    </li>
+                    <li>
+                        <p><strong>Mettre à jour tous les packages :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm update
+                        </div>
+                    </li>
+                    <li>
+                        <p><strong>Désinstaller un package :</strong></p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm uninstall nom_du_package
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            
+            <section id="files">
+                <h2>7. Les fichiers <code>package.json</code> et <code>node_modules</code></h2>
+                <ul>
+                    <li><strong>package.json</strong> : Contient les informations du projet et ses dépendances.</li>
+                    <li><strong>node_modules/</strong> : Contient tous les packages installés.</li>
+                    <li><strong>package-lock.json</strong> : Assure que tout le monde utilise les mêmes versions des packages.</li>
+                </ul>
+                <p>Si <code>node_modules</code> devient trop lourd, vous pouvez le supprimer et réinstaller les dépendances avec :</p>
+                
+                <div class="code-block">
+                    <span class="code-label">shell</span>
+                    rm -rf node_modules
+                    npm install
+                </div>
+                
+                <div class="npm-visualization">
+                    <div class="workflow-step">
+                        <div class="icon">📄</div>
+                        <h4>package.json</h4>
+                        <p>Configuration</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="icon">📦</div>
+                        <h4>npm install</h4>
+                        <p>Installation</p>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="icon">📁</div>
+                        <h4>node_modules</h4>
+                        <p>Packages</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="frameworks">
+                <h2>8. Frameworks populaires installés via NPM</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="icon">⚛️</div>
+                        <h3>React</h3>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install react react-dom
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🖖</div>
+                        <h3>Vue.js</h3>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install vue
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🅰️</div>
+                        <h3>Angular</h3>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install @angular/core
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🎨</div>
+                        <h3>Tailwind CSS</h3>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install tailwindcss
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">⚡</div>
+                        <h3>Vite</h3>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm install vite
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="security">
+                <h2>9. Sécurité et bonnes pratiques avec NPM</h2>
+                <ul>
+                    <li>
+                        <p><strong>Vérifier les vulnérabilités des packages</strong> :</p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm audit
+                        </div>
+                    </li>
+                    <li>
+                        <p><strong>Corriger les vulnérabilités automatiquement</strong> :</p>
+                        <div class="code-block">
+                            <span class="code-label">shell</span>
+                            npm audit fix
+                        </div>
+                    </li>
+                    <li><strong>Utiliser <code>package-lock.json</code> pour des versions cohérentes</strong></li>
+                    <li><strong>Ne pas installer des packages inutiles</strong> pour éviter un projet trop lourd.</li>
+                    <li><strong>Mettre à jour régulièrement</strong> les dépendances.</li>
+                </ul>
+            </section>
+            
+            <section id="conclusion">
+                <h2>Conclusion</h2>
+                <div class="conclusion">
+                    <p>NPM est un outil puissant qui facilite la gestion des dépendances dans un projet JavaScript. Savoir l'utiliser correctement vous permettra d'être plus efficace dans le développement web.</p>
+                    <p>Prenez l'habitude de bien organiser votre <code>package.json</code>, de maintenir vos dépendances à jour et de surveiller la sécurité de vos packages !</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Groupe A|NPM veille - &copy; 2025</p>
+        </div>
+    </footer>
+</body>
+</html>
